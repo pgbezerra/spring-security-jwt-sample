@@ -20,27 +20,28 @@ public class UserRepositoryImpl implements UserRepository {
 	@Autowired
 	private BCryptPasswordEncoder pe;
 	
-	{
+	public UserRepositoryImpl(BCryptPasswordEncoder pe) {
 		User u1 = new User();
 		u1.setId(1L);
 		u1.setEmail("bob@gmail.com");
-		u1.setPassword("$2y$12$QxlYkOKeQWjHmzTLTZkPOuoCMqPqyU/ybJGTDRgwAdvbJcKcO6lw. ");
-		u1.getRoles().add(Role.USER);
+		u1.setPassword(pe.encode("bob123"));
+		u1.getRoles().add(Role.ROLE_USER);
 		
 		User u2 = new User();
 		u2.setId(2L);
 		u2.setEmail("paulo@gmail.com");
-		u2.setPassword("$2y$12$i.SMFdgaY3ePBPsW8dF3yObHK8TJyGKrWQihSce7NofiEpIazVLMO ");
-		u2.getRoles().add(Role.ADMIN);
+		u2.setPassword(pe.encode("paulo123"));
+		u2.getRoles().add(Role.ROLE_ADMIN);
 		
 		User u3 = new User();
 		u3.setId(3L);
 		u3.setEmail("camila@gmail.com");
-		u3.setPassword("$2y$12$QiUKdAoosZ7GG8XcEJJQyOud5AZUKXw7Ta2ssB8aqRQPfgn7x1LrO ");
-		u3.getRoles().addAll(Arrays.asList(Role.USER, Role.ADMIN));
+		u3.setPassword(pe.encode("camila123"));
+		u3.getRoles().addAll(Arrays.asList(Role.ROLE_USER, Role.ROLE_ADMIN));
 		
 		users.addAll(Arrays.asList(u1, u2, u3));
 	}
+	
 
 	@Override
 	public User insert(User user) {
@@ -77,6 +78,11 @@ public class UserRepositoryImpl implements UserRepository {
 		User user = findById(id);
 		users.remove(user);
 		return true;
+	}
+
+	@Override
+	public User findByEmail(String email) {
+		return users.stream().filter(user -> user.getEmail().equals(email)).findFirst().orElse(null);
 	}
 
 }
