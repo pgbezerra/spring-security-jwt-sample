@@ -17,6 +17,7 @@
 
 	<properties>
 		<java.version>11</java.version>
+		<nimbus-jwt.version>9.10</nimbus-jwt.version>
 	</properties>
 
 	<dependencies>
@@ -49,15 +50,10 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.auth0</groupId>
-			<artifactId>java-jwt</artifactId>
-			<version>3.12.0</version>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
+			<version>${nimbus-jwt.version}</version>
 		</dependency>
-		<!-- <dependency> <groupId>io.jsonwebtoken</groupId> <artifactId>jjwt-api</artifactId> 
-			<version>0.11.2</version> </dependency> <dependency> <groupId>io.jsonwebtoken</groupId> 
-			<artifactId>jjwt-impl</artifactId> <version>0.11.2</version> </dependency> 
-			<dependency> <groupId>io.jsonwebtoken</groupId> <artifactId>jjwt-jackson</artifactId> 
-			<version>0.11.2</version> </dependency> -->
 	</dependencies>
 
 	<build>
