@@ -61,7 +61,9 @@ public class JWTUtil {
 		try {
 			String decryptedToken = decryptToken(token);
 			validateTokenSignature(decryptedToken);
-			return true;
+			var signedJWT = SignedJWT.parse(decryptedToken);
+			var jwtClaimsSet = signedJWT.getJWTClaimsSet();
+			return jwtClaimsSet.getExpirationTime().after(new Date(System.currentTimeMillis()));
 		} catch (Exception e){
 			return false;
 		}
@@ -92,7 +94,7 @@ public class JWTUtil {
 		log.info("Starting the encryptToken method");
 		var directEncryptor = new DirectEncrypter(secret.getBytes());
 
-		JWEObject jweObject = new JWEObject(new JWEHeader.Builder(JWEAlgorithm.DIR, EncryptionMethod.A128CBC_HS256)
+		var jweObject = new JWEObject(new JWEHeader.Builder(JWEAlgorithm.DIR, EncryptionMethod.A128CBC_HS256)
 				.contentType("JWT")
 				.build(), new Payload(signedJWT));
 		log.info("Encrypting token with system's private key");
@@ -107,7 +109,7 @@ public class JWTUtil {
 	@SneakyThrows
 	private KeyPair generateKeyPair(){
 		log.info("Generating RSA 2048 bits Keys");
-		KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA");
+		var generator = KeyPairGenerator.getInstance("RSA");
 		generator.initialize(2048);
 		return generator.genKeyPair();
 	}
@@ -128,7 +130,7 @@ public class JWTUtil {
 		var signedJWT = SignedJWT.parse(signedToken);
 		log.info("Token parsed! Retrieving public key from signed token");
 
-		RSAKey publicKey = RSAKey.parse(signedJWT.getHeader().getJWK().toJSONObject());
+		var publicKey = RSAKey.parse(signedJWT.getHeader().getJWK().toJSONObject());
 
 		log.info("Public key retrieved, validating signature");
 
